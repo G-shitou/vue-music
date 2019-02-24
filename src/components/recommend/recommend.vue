@@ -62,7 +62,8 @@ export default {
       this.getRecommendList(id).then( () => {
           // 请求数据成功后,打开歌单
           Indicator.close();
-          this.$emit('showSongList');
+          // this.$emit('showSongList');
+          this.$router.push('recommendList')
       }).catch( () => {
           Indicator.close();
           Toast({
@@ -94,7 +95,7 @@ export default {
   width: 100%
   .swipe
     width: 100%
-    height: 150px
+    height: 160px
     img
       width:100%
       height:100%
@@ -132,7 +133,7 @@ export default {
           font-size:.27rem
         .playNum
           font-size:.27rem
-          color:#999
+          color:$grayColor
           margin-bottom:5px
           font
             font-weight:bold
