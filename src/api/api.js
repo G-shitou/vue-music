@@ -21,7 +21,10 @@ export default {
     recommendList:{
         url:'/api/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg',
         params:{
-            'type':1
+            'type':1,
+            'utf8':1,
+            'inCharset':'utf8',
+            'outCharset':'utf-8'
         }
     }
 }
