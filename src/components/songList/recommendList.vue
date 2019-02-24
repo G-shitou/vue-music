@@ -22,10 +22,16 @@
         <!-- 歌曲列表 -->
         <div class="recommendList">
             <div class="songList">
-                <div v-for="(song,index) in recommendList.songlist" :key="song.songid">
-                    {{index}}<p class="songname">{{song.songname}}</p>
-                    <p class="singer"> {{song.albumname}}</p>
-                </div>
+                <li class="song" v-for="(song,index) in recommendList.songlist" :key="song.songid">
+                    <div class="index">
+                        <div class="num"> {{ index+1 }} </div>
+                        <div class="sort"></div>
+                    </div>
+                    <div class="name">
+                        <div class="title">{{song.songname}}</div>
+                        <div class="singer"><font>{{getSinger(song.singer)}} ·</font>{{song.albumname}}</div>
+                    </div>
+                </li>
             </div>
         </div>
     </div>
@@ -42,7 +48,19 @@ export default {
   computed: {
     ...mapState({
       recommendList: state => state.recommendList
-    })
+    }),
+    getSinger:function(){
+        return (arr) => {
+            if(arr.length === 1){
+                return arr[0].name
+            }
+            var singer = '';
+            arr.forEach((value,index,arr) => {
+                singer += value.name + '/'
+            });
+            return singer.substr(0,singer.length-1)
+        }
+    }
   },
   methods:{
   }
@@ -138,4 +156,41 @@ export default {
     .recommendList
         width:100%
         height:auto
+        .songList
+            width:100%
+            .song
+                width:100%
+                height:62px
+                overflow:hidden
+                display:-webkit-box
+                .index
+                    color:$mainColor
+                    display: -webkit-box
+                    -webkit-box-orient: vertical
+                    -webkit-box-pack: center
+                    -webkit-box-align: center
+                    width: 45px
+                    font-size:.3rem
+                    .sort
+                        height:18px
+                .name
+                    -webkit-box-flex:1
+                    color:$redColor
+                    display: -webkit-box
+                    -webkit-box-orient: vertical
+                    -webkit-box-pack:center                 
+                    width: 45px
+                    font-size:.33rem
+                    white-space: nowrap
+                    .title
+                        color:#000
+                        text-overflow: ellipsis                      
+                    .singer
+                        margin-top:5px
+                        height:18px
+                        font-size:.25rem
+                        color:$grayColor
+                        text-overflow: ellipsis                    
+                        font
+                            margin-right:8px
 </style>
