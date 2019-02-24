@@ -62,7 +62,6 @@ export default {
       this.getRecommendList(id).then( () => {
           // 请求数据成功后,打开歌单
           Indicator.close();
-          // this.$emit('showSongList');
           this.$router.push('recommendList')
       }).catch( () => {
           Indicator.close();
