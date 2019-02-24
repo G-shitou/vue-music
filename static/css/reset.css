@@ -37,3 +37,7 @@ img {
   display: block;
   clear: both;
 }
+
+div {
+  box-sizing:border-box
+}
