@@ -23,14 +23,14 @@
             <!-- 歌曲列表 -->
             <div class="recommendList">
                 <div class="songList">
-                    <li class="song" v-for="(song,index) in recommendList.songlist" :key="song.songid">
+                    <li class="song" v-for="(song,index) in recommendList.songlist" :key="song.songid" @click.stop="changeSong({id:song.songid,type:song.type})">
                         <div class="index">
                             <div class="num"> {{ index+1 }} </div>
                             <div class="sort"></div>
                         </div>
                         <div class="name">
-                            <div class="title">{{song.songname}}</div>
-                            <div class="singer"><font>{{getSinger(song.singer)}} ·</font>{{song.albumname}}</div>
+                            <div class="title" :class='{alive:song.songname == singing.title}'>{{song.songname}}</div>
+                            <div class="singer" :class='{alive:song.songname == singing.title}'><font>{{getSinger(song.singer)}} ·</font>{{song.albumname}}</div>
                         </div>
                     </li>
                 </div>
@@ -40,6 +40,8 @@
 </template>
 
 <script>
+import { Toast } from 'mint-ui'
+import { Indicator } from 'mint-ui'
 import BScroll from 'better-scroll'
 import { mapState , mapActions} from 'vuex'
 export default {
@@ -49,8 +51,11 @@ export default {
       }
   },
   computed: {
-    ...mapState({
+    ...mapState('recommendList',{
       recommendList: state => state.recommendList
+    }),
+    ...mapState('player',{
+        singing: state => state.singing
     }),
     getSinger:function(){
         return (arr) => {
@@ -79,6 +84,25 @@ export default {
                 }
             })
         },
+        ...mapActions('recommendList',[
+            'getRecommendSong'
+        ]),
+        changeSong(obj){
+            Indicator.open({
+                text: '加载中...',
+                spinnerType: 'fading-circle'
+            });
+            this.getRecommendSong(obj).then( res => {
+                Indicator.close();
+            }).catch( error => {
+                Indicator.close();
+                Toast({
+                    message: '加载失败,网络错误!',
+                    position: 'center',
+                    duration: 5000
+                });
+            })
+        }
     }
 }
 </script>
@@ -216,4 +240,6 @@ export default {
                             overflow:hidden                    
                             font
                                 margin-right:8px
+                        .alive
+                            color:$mainColor
 </style>
