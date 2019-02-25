@@ -31,19 +31,10 @@ export default {
     getRecommendSong:{
         url:'/pcapi/cgi-bin/musicu.fcg',
         params:{
-            comm:{
-                uin:0,
-                ct:24,
-                cv:0,
-                gzip:0,
-                mcc:460,
-                mnc:1
-            },
-            data_id:{
-                module:"track_info.UniformRuleCtrlServer",
-                method:"GetTrackInfo",
+            detail:{
+                module:"music.pf_song_detail_svr",
+                method:"get_song_detail",
                 param:{
-                   
                 }
             }
         }

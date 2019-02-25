@@ -2,12 +2,14 @@
     <div class="home">
         <keep-alive>
             <router-view></router-view>
-        </keep-alive>    
+        </keep-alive>
+        <player></player>   
     </div>
 </template>
 <script>
 import home from '../home/home'
 import recommendList from '../songList/recommendList'
+import player from '../player/player'
 export default {
     name: 'index',
     data () {
@@ -17,7 +19,8 @@ export default {
     },
     components: {
         home,
-        recommendList
+        recommendList,
+        player
     },
     mounted (){
     
