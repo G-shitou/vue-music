@@ -29,8 +29,8 @@
                             <div class="sort"></div>
                         </div>
                         <div class="name">
-                            <div class="title" :class='{alive:song.songname == singing.title}'>{{song.songname}}</div>
-                            <div class="singer" :class='{alive:song.songname == singing.title}'><font>{{getSinger(song.singer)}} ·</font>{{song.albumname}}</div>
+                            <div class="title" :class='{alive:song.songname == singing.track_info.title}'>{{song.songname}}</div>
+                            <div class="singer" :class='{alive:song.songname == singing.track_info.title}'><font>{{getSinger(song.singer)}} ·</font>{{song.albumname}}</div>
                         </div>
                     </li>
                 </div>
