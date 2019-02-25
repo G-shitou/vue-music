@@ -1,6 +1,7 @@
 <template>
     <div class="player">
-
+        <div class="logo"></div>
+        <div class=""></div>
     </div>
 </template>
 
