@@ -3,6 +3,7 @@
         <div class="songList">
             <!-- 歌单头部 -->
             <div class="header">
+                <img :src="recommendList.logo" alt="" class="bglogo">
                 <div class="content">
                     <div class="introduce">
                         <div class="logo">
@@ -18,12 +19,11 @@
                         <a href="javascriptl:;">播放全部</a>
                     </div>
                 </div>
-                <img :src="recommendList.logo" alt="" class="bglogo">
             </div>
             <!-- 歌曲列表 -->
             <div class="recommendList">
                 <div class="songList">
-                    <li class="song" v-for="(song,index) in recommendList.songlist" :key="song.songid" @click.stop="changeSong({id:song.songid,type:song.type})">
+                    <li class="song" v-for="(song,index) in recommendList.songlist" :key="song.songid" @click.stop="changeSong({id:song.songid})">
                         <div class="index">
                             <div class="num"> {{ index+1 }} </div>
                             <div class="sort"></div>
@@ -45,7 +45,7 @@ import { Indicator } from 'mint-ui'
 import BScroll from 'better-scroll'
 import { mapState , mapActions} from 'vuex'
 export default {
-  name: 'songList',
+  name: 'recommendList',
   data () {
       return {
       }
@@ -115,19 +115,17 @@ export default {
     .songList
         position:relative
         width:100%
-        background:#fff
         overflow :hidden
         .header
             position:relative
             height:254px
             width:100%
             overflow :hidden
-            z-index:1
             img.bglogo
                 position:absolute
                 top:0
                 left:0
-                z-index:2 
+                z-index:-1 
                 width: 100%
                 height: 100%
                 object-fit: cover
@@ -137,7 +135,7 @@ export default {
                 position:relative
                 height:100%
                 width:100%
-                z-index:3
+                z-index:5
                 background-color:rgba(0,0,0,.5)
                 overflow :hidden
                 .introduce
@@ -148,7 +146,7 @@ export default {
                     width:100%
                     padding:45px 15px 0
                     -webkit-box-pack:center
-                    -webkit-box-align:center                
+                    -webkit-box-align:center               
                     .logo
                         position:relative
                         width:125px
