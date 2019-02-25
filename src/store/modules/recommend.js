@@ -26,7 +26,7 @@ const actions = {
     // 获取pc端推荐歌单数据
     getRecommends ({ state, commit }){
         get(api.recommends.url,{
-            data:api.recommends.params.data
+            params:api.recommends.params
         }).then(res => {
             commit('initSongSheets',{songSheets:res.data.recomPlaylist.data.v_hot})
         }).catch(error => {
@@ -38,9 +38,11 @@ const actions = {
         return new Promise((resolve, reject) => {
             let params = api.recommendList.params;
             params.disstid = id;
-            get(api.recommendList.url,params).then(res => {
+            get(api.recommendList.url,{
+                params
+            }).then(res => {
                 let resultData = JSON.parse(res.data.substring(13, res.data.length - 1));
-                commit('initRecommendList',{recommendList:resultData.cdlist[0]},{ root: true });
+                commit('recommendList/initRecommendList',{recommendList:resultData.cdlist[0]},{ root: true });
                 resolve()
             }).catch(error => {
                 console.log(error);

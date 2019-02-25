@@ -26,5 +26,26 @@ export default {
             'inCharset':'utf8',
             'outCharset':'utf-8'
         }
+    },
+    // 推荐歌单中获取歌曲信息
+    getRecommendSong:{
+        url:'/pcapi/cgi-bin/musicu.fcg',
+        params:{
+            comm:{
+                uin:0,
+                ct:24,
+                cv:0,
+                gzip:0,
+                mcc:460,
+                mnc:1
+            },
+            data_id:{
+                module:"track_info.UniformRuleCtrlServer",
+                method:"GetTrackInfo",
+                param:{
+                   
+                }
+            }
+        }
     }
 }
