@@ -17,8 +17,7 @@ const actions = {
     getRecommendSong ({state,commit},payload){
         return new Promise((resolve, reject) => {
             let params = api.getRecommendSong.params;
-            params.data_id.param.ids = [payload.id]
-            params.data_id.param.types = [payload.type]
+            params.detail.param.song_id = payload.id
             post(api.getRecommendSong.url,params).then( res => {
                 commit('player/changeSong',{song:res.data},{ root: true });
                 resolve()
