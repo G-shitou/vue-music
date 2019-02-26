@@ -79,23 +79,23 @@ export default {
 <style lang="stylus">
   .homePage
     .mint-navbar
-      position :fixed
-      top:45px
+      position :absolute
+      top:0.9rem
       left:0
-      height:40px
+      height:.8rem
       width:100%
       z-index:1
       .mint-tab-item.is-selected
         border-bottom: 2px solid $mainColor
-        padding:12px 0
+        padding:.24rem 0
         margin-bottom:0
         .mint-tab-item-label
           color:$mainColor
-          font-size:16px
+          font-size:.32rem
       .mint-tab-item
-        padding:12px 0
+        padding:.24rem 0
         .mint-tab-item-label
-          font-size:16px
+          font-size:.32rem
           color:$grayColor
     .mint-tab-container
       height:100%
@@ -107,29 +107,27 @@ export default {
 <style scoped lang='stylus'>
 .homePage
     position :relative
-    padding-top:45px
+    padding-top:1.7rem
     height:100%
     box-sizing:border-box
     .container
       height:100%
       .header
-        position:fixed
-        top:0 
+        position: absolute
+        top:0
         left:0
-        height:45px
+        height:.9rem
         width:100%
         background:$mainColor
         z-index:1
         img
-          height:25px
-          width:90px
-          margin:10px 0 0 15px
+          height:.5rem
+          width:1.5rem
+          margin:.2rem 0 0 .3rem
           display:block
       .nav
-        position:relative
         height:100%
         overflow:hidden
-        padding-top:40px
         box-sizing:border-box
         .tabContainer
           height:100%

@@ -82,8 +82,8 @@ export default {
     .mint-swipe-indicators
       bottom:0
       .mint-swipe-indicator
-        width:6px
-        height:6px
+        width:.12rem
+        height:.12rem
         opacity:.4
       .mint-swipe-indicator.is-active
         opacity:1
@@ -94,17 +94,17 @@ export default {
   width: 100%
   .swipe
     width: 100%
-    height: 160px
+    height: 3.2rem
     img
       width:100%
       height:100%
   .recommendForYou
-    padding-top:10px
+    padding-top:.2rem
     h6
       font-size:.31rem
       color: #000;
-      margin-bottom:11px
-      margin-left:10px
+      margin-bottom:.22rem
+      margin-left:.2rem
       font-weight: normal
     .songSheets
       display:flex
@@ -128,16 +128,16 @@ export default {
             background:url("../../assets/img/icon_sprite.png") 0 0
             background-size:100% 250%
         .title
-          margin-top:7px
+          margin-top:.14rem
           font-size:.27rem
         .playNum
           font-size:.27rem
           color:$grayColor
-          margin-bottom:5px
+          margin-bottom:.1rem
           font
             font-weight:bold
       .songSheet:nth-child(odd)
-        padding:0 5px 0 10px
+        padding:0 .1rem 0 .2rem
       .songSheet:nth-child(even)
-        padding:0 10px 0 5px 
+        padding:0 .2rem 0 .1rem 
 </style>

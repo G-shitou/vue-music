@@ -118,7 +118,7 @@ export default {
         overflow :hidden
         .header
             position:relative
-            height:254px
+            height:5.08rem
             width:100%
             overflow :hidden
             img.bglogo
@@ -130,7 +130,7 @@ export default {
                 height: 100%
                 object-fit: cover
                 -webkit-transform: scale(1.1) translateZ(0)
-                -webkit-filter: blur(36px)
+                -webkit-filter: blur(.72rem)
             .content
                 position:relative
                 height:100%
@@ -142,15 +142,15 @@ export default {
                     display:-o-box
                     display:-moz-box
                     display:-webkit-box
-                    height:170px
+                    height:3.4rem
                     width:100%
-                    padding:45px 15px 0
+                    padding:.9rem .3rem 0
                     -webkit-box-pack:center
                     -webkit-box-align:center               
                     .logo
                         position:relative
-                        width:125px
-                        margin-right:15px
+                        width:2.5rem
+                        margin-right:.3rem
                         img
                             width:100%
                             height:100%
@@ -170,31 +170,31 @@ export default {
                             -webkit-line-clamp: 2                        
                         .small,.num
                             font-size:.25rem
-                            margin-top:8px
+                            margin-top:.16rem
                 .playButton,.playButton a
                     display:-webkit-box
                     -webkit-box-pack:center
                     -webkit-box-align:center
                 .playButton
-                    height:84px
+                    height:1.68rem
                     a
-                        height:40px
-                        width:170px
+                        height:.8rem
+                        width:3.4rem
                         overflow: hidden
                         text-align: center
                         font-size: .3rem
                         color: #fff
-                        border-radius: 20px
+                        border-radius: .4rem
                         background: $mainColor
                         &:before
                             content:''
                             display:block
                             width:0px
                             height:0px
-                            margin-right:5px
-                            border-top:7px solid transparent
-                            border-bottom:7px solid transparent
-                            border-left:11px solid #fff
+                            margin-right:.1rem
+                            border-top:.14rem solid transparent
+                            border-bottom:.14rem solid transparent
+                            border-left:.22rem solid #fff
         .recommendList
             width:100%
             height:auto
@@ -202,7 +202,7 @@ export default {
                 width:100%
                 .song
                     width:100%
-                    height:62px
+                    height:1.24rem
                     overflow:hidden
                     display:-webkit-box
                     .index
@@ -211,17 +211,17 @@ export default {
                         -webkit-box-orient: vertical
                         -webkit-box-pack: center
                         -webkit-box-align: center
-                        width: 45px
+                        width: .9rem
                         font-size:.3rem
                         .sort
-                            height:18px
+                            height:.36rem
                     .name
                         -webkit-box-flex:1
                         color:$redColor
                         display: -webkit-box
                         -webkit-box-orient: vertical
                         -webkit-box-pack:center                 
-                        width: 45px
+                        width: .36rem
                         font-size:.33rem
                         .title
                             color:#000
@@ -229,15 +229,15 @@ export default {
                             text-overflow: ellipsis                      
                             overflow:hidden
                         .singer
-                            margin-top:5px
-                            height:18px
+                            margin-top:.1rem
+                            height:.36rem
                             font-size:.25rem
                             color:$grayColor
                             white-space: nowrap
                             text-overflow: ellipsis                      
                             overflow:hidden                    
                             font
-                                margin-right:8px
+                                margin-right:.16rem
                         .alive
                             color:$mainColor
 </style>
