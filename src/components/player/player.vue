@@ -33,7 +33,7 @@ export default {
 <style scoped lang="stylus">
 .player
     width:100%
-    height:50px
+    height:1rem
     position:fixed
     bottom:0
     left:0
