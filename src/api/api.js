@@ -38,5 +38,9 @@ export default {
                 }
             }
         }
+    },
+    //获取歌曲token
+    getVkey:{
+        url:'/api/base/fcgi-bin/fcg_music_express_mobile3.fcg'
     }
 }
