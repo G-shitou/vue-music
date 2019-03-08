@@ -14,12 +14,13 @@ const getters = {
 
 // actions
 const actions = {
-    getRecommendSong ({state,commit},payload){
+    getRecommendSong ({state,dispatch},payload){
         return new Promise((resolve, reject) => {
+            // 没考虑判断播放列表是否已存在歌曲
             let params = api.getRecommendSong.params;
             params.detail.param.song_id = payload.id
             post(api.getRecommendSong.url,params).then( res => {
-                commit('player/changeSong',{song:res.data},{ root: true });
+                dispatch('player/changeSong',{song:res.data.detail.data},{ root: true });
                 resolve()
             }).catch( error => {
                 console.log(error)

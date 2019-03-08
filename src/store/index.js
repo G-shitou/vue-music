@@ -11,7 +11,7 @@ const debug = process.env.NODE_ENV !== 'production'
 
 export default new Vuex.Store({
     state:{
-
+        guid:126548448
     },
     mutations:{
         
