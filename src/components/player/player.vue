@@ -3,7 +3,9 @@
         <div class="logo">
             <img :src="singing.img" alt="">        
         </div>
-        <div class="lyric"></div>
+        <div class="lyric">
+            <div class="title"></div>
+        </div>
         <div class="iconfont" :class="isPlay?'icon-bofang':'icon-bofang1'"></div>
         <div class="iconfont icon-liebiao"></div>
         <!-- <audio :src="singing.audioSrc" autoplay></audio> -->
