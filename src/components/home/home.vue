@@ -122,7 +122,7 @@ export default {
         z-index:1
         img
           height:.5rem
-          width:1.5rem
+          width:1.9rem
           margin:.2rem 0 0 .3rem
           display:block
       .nav
