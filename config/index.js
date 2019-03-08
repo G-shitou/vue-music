@@ -26,6 +26,10 @@ module.exports = {
       },
       '/pcapi': {
         target: 'https://u.y.qq.com/',//设置调用的接口域名和端口号
+        bypass: function (req,res,proxyOptions) {
+          req.headers.referer = 'https://u.y.qq.com/',
+          req.headers.host = 'u.y.qq.com/'
+        },
         changeOrigin: true, //跨域
         pathRewrite: {
           '^/pcapi': '/' //这里理解成用‘/api’代替target里面的地址
