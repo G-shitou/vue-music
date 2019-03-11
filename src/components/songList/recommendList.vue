@@ -16,7 +16,7 @@
                         </div>
                     </div>
                     <div class="playButton">
-                        <a href="javascriptl:;">播放全部</a>
+                        <a href="javascriptl:;" @click="playAll()">播放全部</a>
                     </div>
                 </div>
             </div>
@@ -102,6 +102,13 @@ export default {
                     duration: 5000
                 });
             })
+        },
+        playAll(){
+            Toast({
+                message: '暂未开发!',
+                position: 'center',
+                duration: 5000
+            });
         }
     }
 }

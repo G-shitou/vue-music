@@ -5,12 +5,13 @@ import {get,post} from '../../http/http'
 const state = {
     songs:[],
     singing:{
-        title:'',
+        title:'仅供交流学习',
         audioSrc:'',
         img:'https://y.gtimg.cn/music/photo_new/T001R300x300M000001BLpXF2DyJe2.jpg?max_age=2592000'
     },
     isPlay:false,
-    currentIndex:0
+    currentIndex:0,
+    playOrder:'loop'
 }
 
 // getters
@@ -55,7 +56,7 @@ const actions = {
                 audioSrc:'http://ws.stream.qqmusic.qq.com/'+params.filename+'?fromtag=0&guid='+rootState.guid+'&vkey='+res.data.data.items[0].vkey,
                 img:'https://y.gtimg.cn/music/photo_new/T002R300x300M000'+payload.song.track_info.album.mid+'.jpg?max_age=2592000'
             }
-            commit('changeSong',{song});
+            commit('addSong',{song});
         }).catch( error => {
             console.log(error)
         })
@@ -64,12 +65,35 @@ const actions = {
 
 // mutations
 const mutations = {
-    changeSong(state,payload){
+    addSong(state,payload){
         // 修改状态
         state.singing = payload.song;
         state.songs.push(payload.song);
         state.isPlay = true;
         state.currentIndex += 1;
+    },
+    changePlay(state){
+        state.isPlay = state.isPlay ? false : true;
+    },
+    changeSong(state){
+        let length = state.songs.length;
+        switch(state.playOrder){
+            case 'loop':
+                // 顺序播放
+                if(state.currentIndex == length){
+                    state.singing = state.songs[0];
+                    state.currentIndex = 1;
+                }else{
+                    state.singing = state.songs[state.currentIndex];
+                    state.currentIndex += 1;
+                }
+                break;
+            case 2:
+                // 随机播放
+                break;
+            case 3:
+                break;
+        }
     }
 }
 
