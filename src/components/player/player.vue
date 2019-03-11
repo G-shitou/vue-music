@@ -16,10 +16,12 @@
         <audio id="audio" ref="audio" :src="singing.audioSrc" autoplay @timeupdate="changeLyric()"></audio>
         <div class="songList" v-show="showList">
             <div class="content">
-                <div class="close">关闭</div>
+                <div class="close">
+                    <font @click="showSongs()">关闭</font>
+                </div>
                 <ul>
                     <li v-for="(song,index) in songs" :key="song.songmid" @click="changeSinging(index)">
-
+                        <p class="title">{{song.title}}-{{song.singer}}</p>
                     </li>
                 </ul>
             </div>
@@ -60,6 +62,10 @@ export default {
       ]),
       // 改变歌词
       changeLyric(){
+            if(!this.isPlay){
+                this.$refs.lyrics.innerHTML = this.singing.singer
+                return;
+            }
             let lyrics = this.singing.lyric;
             if (lyrics.length == 0){
                 this.$refs.lyrics.innerHTML = '暂无歌词!';
@@ -83,7 +89,6 @@ export default {
       // 加载播放列表
       showSongs(){
         this.showList = !this.showList;
-        console.log(this.showList);
       },
       // 点击列表切换歌曲
       changeSinging(index){
@@ -159,4 +164,22 @@ export default {
                 text-overflow: ellipsis
                 overflow: hidden
                 color:$grayColor
+    .songList
+        position:absolute
+        top:-4rem
+        left:0
+        height:4rem
+        width:100%
+        background-color:rgba(0,0,0,.8)
+        color:#fff
+        .content
+            width:100%
+            .close
+                margin:0 auto
+                text-align:center
+                font-size:.4rem
+                line-height:.8rem
+            ul li
+                line-height:.5rem
+                font-size:.33rem
 </style>
