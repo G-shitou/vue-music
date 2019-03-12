@@ -1,31 +1,37 @@
 <template>
     <div class="player">
-        <div class="logo" :class="isPlay ? 'rotate' : 'noRotate'">
-            <img :src="singing.img" alt="">
-        </div>
-        <div class="lyric">
-            <div class="title">{{singing.title}}</div>
-            <div class="text">
-                <div class="content" ref="lyrics">
-                    <!-- <p v-for="(lyric,index) in singing.lyric" :key="index">{{lyric.text}}</p>     -->
+        <div class="play">
+            <div class="logo" :class="isPlay ? 'rotate' : 'noRotate'">
+                <img :src="singing.img" alt="">
+            </div>
+            <div class="lyric">
+                <div class="title">{{singing.title}}</div>
+                <div class="text">
+                    <div class="content" ref="lyrics">
+                        <!-- <p v-for="(lyric,index) in singing.lyric" :key="index">{{lyric.text}}</p>     -->
+                    </div>
                 </div>
             </div>
+            <div class="iconfont" :class="isPlay?'icon-bofang':'icon-bofang1'" @click="changePlaying()"></div>
+            <div class="iconfont icon-liebiao" @click="showSongs()"></div>
+            <audio id="audio" ref="audio" :src="singing.audioSrc" autoplay @timeupdate="changeLyric()"></audio>
         </div>
-        <div class="iconfont" :class="isPlay?'icon-bofang':'icon-bofang1'" @click="changePlaying()"></div>
-        <div class="iconfont icon-liebiao" @click="showSongs()"></div>
-        <audio id="audio" ref="audio" :src="singing.audioSrc" autoplay @timeupdate="changeLyric()"></audio>
-        <div class="songList" v-show="showList">
-            <div class="content">
-                <div class="close">
-                    <font @click="showSongs()">关闭</font>
+        <transition name="fade">
+            <div class="songList" v-show="showList">
+                <div class="content">
+                    <div class="close">
+                        <font>播放列表</font>
+                    </div>
+                    <ul>
+                        <li v-for="(song,index) in songs" :key="song.songmid">
+                            <p class="index">{{index + 1}}</p>
+                            <p class="title" @click="changeSinging(index)" :class="{active:song.songmid == singing.songmid}">{{song.title}} - {{song.singer}}</p>
+                            <p class="delete" @click="deleteSongs()"></p>
+                        </li>
+                    </ul>
                 </div>
-                <ul>
-                    <li v-for="(song,index) in songs" :key="song.songmid" @click="changeSinging(index)">
-                        <p class="title">{{song.title}}-{{song.singer}}</p>
-                    </li>
-                </ul>
             </div>
-        </div>
+        </transition>
     </div>
 </template>
 
@@ -33,6 +39,7 @@
 import { Toast } from 'mint-ui'
 import { Indicator } from 'mint-ui'
 import { mapState , mapActions, mapMutations} from 'vuex'
+import BScroll from 'better-scroll'
 export default {
   name: 'player',
   data () {
@@ -53,7 +60,8 @@ export default {
         let _this = this;
         audio.addEventListener('ended', function () {
             _this.changeSong();
-        })
+        });
+        this.initScroll();
   },
   methods:{
       ...mapMutations('player',[
@@ -73,7 +81,7 @@ export default {
             }
             let currentTime = this.$refs.audio ? this.$refs.audio.currentTime * 1000 : 0;
             for(let i =0;i<lyrics.length;i++){
-                if(lyrics[i].time >= currentTime+300){
+                if(lyrics[i].time >= currentTime){
                     this.$refs.lyrics.innerHTML = (lyrics[i-1]) ? lyrics[i-1].text : '';
                     break;
                 }
@@ -89,12 +97,25 @@ export default {
       // 加载播放列表
       showSongs(){
         this.showList = !this.showList;
+        this.$nextTick(() => {
+            this.myscroll.refresh();
+        })
       },
       // 点击列表切换歌曲
       changeSinging(index){
           console.log(index);
+      },
+      initScroll(){
+        this.myscroll = new BScroll('.songList',{click:true});
+        this.$nextTick(()=>{
+            if(!this.myscroll){
+                this.myscroll = new BScroll('.songList',{click:true})
+            }else{
+                this.myscroll.refresh();
+            }
+        })
       }
-  }
+    }
 
 }
 </script>
@@ -115,55 +136,63 @@ export default {
     position:fixed
     bottom:0
     left:0
-    display:-webkit-box
-    -webkit-box-align:center
-    -webkit-box-orient: horizontal
-    .logo,.iconfont
-        width:.7rem
-        height:.7rem
-    .logo
-        border-radius:.35rem
-        overflow:hidden
-        margin:0 .2rem
-        img
-            width:100%
-            height:100%
-    .rotate
-        animation:rotate 12s linear infinite
-    .noRotate
-        animation:rotate 12s linear infinite
-        animation-play-state: paused
-    .iconfont
-        color:$mainColor
-        margin-right:.2rem
-        font-size:.5rem
+    .play
+        width:100%
+        height:100%
+        background:#fff
         display:-webkit-box
         -webkit-box-align:center
-        -webkit-box-pack:center
-    .lyric
-        -webkit-box-flex:1
-        -moz-box-flex:1
-        height:.7rem
-        display:-webkit-box
-        -webkit-box-orient:vertical
-        overflow:hidden
-        .title
-            font-size:.3rem
-            line-height:.4rem
-            white-space: nowrap
-            text-overflow: ellipsis
-            overflow: hidden
-            color:$mainColor
-        .text
+        -webkit-box-orient: horizontal
+        .logo,.iconfont
+            width:.7rem
+            height:.7rem
+        .logo
+            border-radius:.35rem
             overflow:hidden
-            height:.31rem
-            .content
-                font-size:.24rem
-                line-height:.31rem
+            margin:0 .2rem
+            img
+                width:100%
+                height:100%
+        .rotate
+            animation:rotate 12s linear infinite
+        .noRotate
+            animation:rotate 12s linear infinite
+            animation-play-state: paused
+        .iconfont
+            color:$mainColor
+            margin-right:.2rem
+            font-size:.5rem
+            display:-webkit-box
+            -webkit-box-align:center
+            -webkit-box-pack:center
+        .lyric
+            -webkit-box-flex:1
+            -moz-box-flex:1
+            height:.7rem
+            display:-webkit-box
+            -webkit-box-orient:vertical
+            overflow:hidden
+            .title
+                font-size:.3rem
+                line-height:.4rem
                 white-space: nowrap
                 text-overflow: ellipsis
                 overflow: hidden
-                color:$grayColor
+                color:$mainColor
+            .text
+                overflow:hidden
+                height:.31rem
+                .content
+                    font-size:.24rem
+                    line-height:.31rem
+                    white-space: nowrap
+                    text-overflow: ellipsis
+                    overflow: hidden
+                    color:$grayColor
+    .fade-enter-active,.fade-leave-active  
+        transition: all .5s
+    .fade-enter,.fade-leave-to
+        transform: translateY(100%)
     .songList
         position:absolute
         top:-4rem
@@ -172,14 +201,32 @@ export default {
         width:100%
         background-color:rgba(0,0,0,.8)
         color:#fff
+        z-index:-1
+        box-shadow: 0px -1px 0 0 $mainColor
+        overflow:hidden
         .content
-            width:100%
+            width:100
             .close
                 margin:0 auto
                 text-align:center
-                font-size:.4rem
-                line-height:.8rem
+                font-size:.3rem
+                line-height:.6rem
+                font
+                    color:$mainColor
+                    font-weight:bold
             ul li
-                line-height:.5rem
-                font-size:.33rem
+                line-height:.8rem
+                font-size:.28rem
+                // box-shadow: 0px -1px 0 0 $mainColor
+                display:-webkit-box
+                .index
+                    width:.8rem
+                    display: -webkit-box
+                    -webkit-box-pack: center
+                    -webkit-box-align: center
+                .title
+                    -webkit-flex:1
+                    flex:1
+                .active
+                    color:$mainColor
 </style>
