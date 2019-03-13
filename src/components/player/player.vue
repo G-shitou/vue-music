@@ -14,7 +14,7 @@
             </div>
             <div class="iconfont" :class="isPlay?'icon-bofang':'icon-bofang1'" @click="changePlaying()"></div>
             <div class="iconfont icon-liebiao" @click="showSongs()"></div>
-            <audio id="audio" ref="audio" :src="singing.audioSrc" autoplay @timeupdate="changeLyric()"></audio>
+            <audio id="audio" ref="audio" :src="singing.audioSrc" @timeupdate="changeLyric()"></audio>
         </div>
         <transition name="fade">
             <div class="songList" v-show="showList">
@@ -23,9 +23,10 @@
                         <font>播放列表</font>
                     </div>
                     <ul>
-                        <li v-for="(song,index) in songs" :key="song.songmid">
+                        <li v-for="(song,index) in songs" :key="index">
+                            <img :src="song.img" alt="">
                             <p class="index">{{index + 1}}</p>
-                            <p class="title" @click="changeSinging(index)" :class="{active:song.songmid == singing.songmid}">{{song.title}} - {{song.singer}}</p>
+                            <p class="title" @click="playOther({index})" :class="{active:song.id == singing.id}">{{song.title}} - {{song.singer}}</p>
                             <p class="delete" @click="deleteSongs()"></p>
                         </li>
                     </ul>
@@ -38,7 +39,7 @@
 <script>
 import { Toast } from 'mint-ui'
 import { Indicator } from 'mint-ui'
-import { mapState , mapActions, mapMutations} from 'vuex'
+import { mapState , mapActions, mapMutations, mapGetters} from 'vuex'
 import BScroll from 'better-scroll'
 export default {
   name: 'player',
@@ -54,6 +55,16 @@ export default {
           isPlay: state => state.isPlay
       })
   },
+  watch:{
+      isPlay(now,last){
+          console.log('现在是:'+now);
+          this.$nextTick(()=>{
+            this.$refs.audio.load();
+            console.log('isPlay变化了');
+            this.isPlay ? this.$refs.audio.play() : this.$refs.audio.pause();
+          })
+      }
+  },
   mounted (){
         let audio = document.getElementById('audio');
         // 绑定监听歌曲是否结束监听
@@ -66,7 +77,8 @@ export default {
   methods:{
       ...mapMutations('player',[
           'changePlay',
-          'changeSong'
+          'changeSong',
+          'playOther'
       ]),
       // 改变歌词
       changeLyric(){
@@ -92,18 +104,14 @@ export default {
           // 改变播放状态
           this.changePlay();
           // 暂停或播放歌曲
-          this.isPlay ? this.$refs.audio.play() : this.$refs.audio.pause();
+        //   this.isPlay ? this.$refs.audio.play() : this.$refs.audio.pause();
       },
       // 加载播放列表
       showSongs(){
         this.showList = !this.showList;
         this.$nextTick(() => {
-            this.myscroll.refresh();
+            this.showList&&this.myscroll.refresh();
         })
-      },
-      // 点击列表切换歌曲
-      changeSinging(index){
-          console.log(index);
       },
       initScroll(){
         this.myscroll = new BScroll('.songList',{click:true});
@@ -219,6 +227,10 @@ export default {
                 font-size:.28rem
                 // box-shadow: 0px -1px 0 0 $mainColor
                 display:-webkit-box
+                img
+                    width:.6rem
+                    height:.6rem
+                    margin:.1rem 0 .1rem .2rem
                 .index
                     width:.8rem
                     display: -webkit-box

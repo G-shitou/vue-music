@@ -29,8 +29,8 @@
                             <div class="sort"></div>
                         </div>
                         <div class="name">
-                            <div class="title" :class='{alive:song.songname == singing.title}'>{{song.songname}}</div>
-                            <div class="singer" :class='{alive:song.songname == singing.title}'><font>{{getSinger(song.singer)}} ·</font>{{song.albumname}}</div>
+                            <div class="title" :class='{alive:song.songmid == singing.songmid}'>{{song.songname}}</div>
+                            <div class="singer" :class='{alive:song.songmid == singing.songmid}'><font>{{getSinger(song.singer)}} ·</font>{{song.albumname}}</div>
                         </div>
                     </li>
                 </div>
@@ -43,7 +43,7 @@
 import { Toast } from 'mint-ui'
 import { Indicator } from 'mint-ui'
 import BScroll from 'better-scroll'
-import { mapState , mapActions} from 'vuex'
+import { mapState , mapMutations ,mapActions} from 'vuex'
 export default {
   name: 'recommendList',
   data () {
@@ -55,7 +55,8 @@ export default {
       recommendList: state => state.recommendList
     }),
     ...mapState('player',{
-        singing: state => state.singing
+        singing: state => state.singing,
+        songs: state => state.songs
     }),
     getSinger:function(){
         return (arr) => {
@@ -87,21 +88,37 @@ export default {
         ...mapActions('recommendList',[
             'getRecommendSong'
         ]),
+        ...mapMutations('player',[
+            'playOther',
+            'pause'
+        ]),
         changeSong(obj){
-            Indicator.open({
-                text: '加载中...',
-                spinnerType: 'fading-circle'
-            });
-            this.getRecommendSong(obj).then( res => {
-                Indicator.close();
-            }).catch( error => {
-                Indicator.close();
-                Toast({
-                    message: '加载失败,网络错误!',
-                    position: 'center',
-                    duration: 5000
+            this.pause();
+            // 判断是否在播放列表里
+            let isIn = false;
+            for(let i=0;i<this.songs.length;i++){
+                if(this.songs[i].id == obj.id){
+                    isIn = true;
+                    this.playOther({index:i})
+                    break;
+                }
+            }
+            if(!isIn){
+                Indicator.open({
+                    text: '加载中...',
+                    spinnerType: 'fading-circle'
                 });
-            })
+                this.getRecommendSong(obj).then( res => {
+                    Indicator.close();
+                }).catch( error => {
+                    Indicator.close();
+                    Toast({
+                        message: '加载失败,网络错误!',
+                        position: 'center',
+                        duration: 5000
+                    });
+                })   
+            }
         },
         playAll(){
             Toast({

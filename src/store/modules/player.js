@@ -16,53 +16,16 @@ const state = {
 
 // getters
 const getters = {
-    // someGetters: (state, getters, rootState) => {
-    // }
+    
 }
 
 // actions
 const actions = {
     changeSong: ({state,commit,rootState},payload) => {
-        console.log(payload.song);
-        // 格式化歌词
-        var lyric = [];
-        let lyricArray = payload.song.info.pop().content[0].value.split("\n");
-        lyricArray.forEach((value,index,arr) => {
-            let timeReg = value.match(/\[\d+:\d+(\.\d+)?\]/g);
-            if(timeReg){
-                let text = value.replace(/\[\d+:\d+(\.\d+)?\]/g,'');
-                let min = Number(String(timeReg[0].match(/\[\d+/i)).slice(1));
-                let sec = Number(String(timeReg[0].match(/\:\d+/i)).slice(1));
-                let ms = Number(String(timeReg[0].match(/\.\d+/i)))*1000;
-                let time = (min * 60 + sec) *1000 + ms;
-                lyric.push({time,text});
-            }
-        })
-        lyric = lyric.slice(1);
-        // 格式化singer
-        var singer = '';
-        payload.song.track_info.singer.forEach((value,index,arr) => {
-            singer += value.name + '/'
-        });
-        singer = singer.substr(0,singer.length-1)
-        let params = {
-            guid:rootState.guid,
-            filename:'C400'+payload.song.track_info.mid+'.m4a',
-            songmid:payload.song.track_info.mid,
-            format:'json',
-            platform:'yqq',
-            cid:205361747
-        }
-        get(api.getVkey.url,{params}).then( res => {
-            let song = {
-                vkey:res.data.data.items[0].vkey,
-                songmid:payload.song.track_info.mid,
-                lyric,
-                singer,
-                title:payload.song.track_info.title,
-                audioSrc:'http://ws.stream.qqmusic.qq.com/'+params.filename+'?fromtag=0&guid='+rootState.guid+'&vkey='+res.data.data.items[0].vkey,
-                img:'https://y.gtimg.cn/music/photo_new/T002R300x300M000'+payload.song.track_info.album.mid+'.jpg?max_age=2592000'
-            }
+        get(api.getVkey.url,{params:payload.params}).then( res => {
+            let song = payload.msg;
+            song.vkey = res.data.data.items[0].vkey;
+            song.audioSrc = 'http://ws.stream.qqmusic.qq.com/'+payload.params.filename+'?fromtag=0&guid='+rootState.guid+'&vkey='+res.data.data.items[0].vkey;
             commit('addSong',{song});
         }).catch( error => {
             console.log(error)
@@ -79,10 +42,17 @@ const mutations = {
         state.isPlay = true;
         state.currentIndex += 1;
     },
+    // 点击暂停或播放
     changePlay(state){
         state.isPlay = state.isPlay ? false : true;
     },
+    // 暂停
+    pause(state){
+        state.isPlay = false;
+    },
+    // 播放完之后切换歌曲
     changeSong(state){
+        state.isPlay = false;
         let length = state.songs.length;
         switch(state.playOrder){
             case 'loop':
@@ -90,6 +60,7 @@ const mutations = {
                 if(state.currentIndex == length){
                     state.singing = state.songs[0];
                     state.currentIndex = 1;
+                    console.log('播完了');
                 }else{
                     state.singing = state.songs[state.currentIndex];
                     state.currentIndex += 1;
@@ -100,6 +71,16 @@ const mutations = {
                 break;
             case 3:
                 break;
+        }
+        state.isPlay = true;
+    },
+    // 切换歌曲
+    playOther(state,payload){
+        // 判断是否是当前播放的歌曲
+        if(state.currentIndex != (payload.index + 1)){
+            state.singing =state.songs[payload.index];
+            state.isPlay = true;
+            state.currentIndex = payload.index + 1;
         }
     }
 }
