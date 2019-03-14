@@ -16,7 +16,23 @@ const state = {
 
 // getters
 const getters = {
-    
+    initLyric:(state) => (arr) => {
+        // 格式化歌词
+        var lyric = [];
+        let lyricArray = arr.split("\n");
+        lyricArray.forEach((value,index,arr) => {
+            let timeReg = value.match(/\[\d+:\d+(\.\d+)?\]/g);
+            if(timeReg){
+                let text = value.replace(/\[\d+:\d+(\.\d+)?\]/g,'');
+                let min = Number(String(timeReg[0].match(/\[\d+/i)).slice(1));
+                let sec = Number(String(timeReg[0].match(/\:\d+/i)).slice(1));
+                let ms = Number(String(timeReg[0].match(/\.\d+/i)))*1000;
+                let time = (min * 60 + sec) *1000 + ms;
+                lyric.push({time,text});
+            }
+        })
+        return lyric.slice(1);
+    }
 }
 
 // actions

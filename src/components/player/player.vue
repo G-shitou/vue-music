@@ -14,7 +14,7 @@
             </div>
             <div class="iconfont" :class="isPlay?'icon-bofang':'icon-bofang1'" @click="changePlaying()"></div>
             <div class="iconfont icon-liebiao" @click="showSongs()"></div>
-            <audio id="audio" ref="audio" :src="singing.audioSrc" @timeupdate="changeLyric()"></audio>
+            <audio id="audio" ref="audio" :src="singing.audioSrc" @ended="changeSong()" @timeupdate="changeLyric()"></audio>
         </div>
         <transition name="fade">
             <div class="songList" v-show="showList">
@@ -53,7 +53,10 @@ export default {
           songs: state => state.songs,
           singing: state => state.singing,
           isPlay: state => state.isPlay
-      })
+      }),
+      ...mapGetters('player',[
+          'initLyric'
+      ])
   },
   watch:{
       isPlay(now,last){
@@ -63,15 +66,17 @@ export default {
             console.log('isPlay变化了');
             this.isPlay ? this.$refs.audio.play() : this.$refs.audio.pause();
           })
+      },
+      singing(){
+          // 格式化歌词
+          this.lyric = this.initLyric(this.singing.lyric);
+          clearTimeout(this.timer);
+          this.timer = setTimeout(()=>{
+              this.$refs.audio.play();
+          })
       }
   },
   mounted (){
-        let audio = document.getElementById('audio');
-        // 绑定监听歌曲是否结束监听
-        let _this = this;
-        audio.addEventListener('ended', function () {
-            _this.changeSong();
-        });
         this.initScroll();
   },
   methods:{
@@ -86,7 +91,7 @@ export default {
                 this.$refs.lyrics.innerHTML = this.singing.singer
                 return;
             }
-            let lyrics = this.singing.lyric;
+            let lyrics = this.lyric;
             if (lyrics.length == 0){
                 this.$refs.lyrics.innerHTML = '暂无歌词!';
                 return
