@@ -14,7 +14,7 @@
             </div>
             <div class="iconfont" :class="isPlay?'icon-bofang':'icon-bofang1'" @click="changePlay()"></div>
             <div class="iconfont icon-liebiao" @click="showSongs()"></div>
-            <audio id="audio" ref="audio" :src="singing.audioSrc" @ended="changeSong()" @timeupdate="changeLyric()"></audio>
+            <audio id="audio" ref="audio" :src="singing.audioSrc" @ended="playNext()" @timeupdate="changeLyric()"></audio>
         </div>
         <transition name="fade">
             <div class="songList" v-show="showList">
@@ -79,7 +79,8 @@ export default {
   methods:{
       ...mapMutations('player',[
           'changePlay',
-          'playIndex'
+          'playIndex',
+          'playNext'
       ]),
       ...mapActions('player',[
           'getLyric',

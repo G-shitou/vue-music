@@ -94,19 +94,17 @@ const mutations = {
         state.isPlay = false;
     },
     // 播放完之后切换歌曲
-    changeSong(state){
-        state.isPlay = false;
+    playNext(state){
         let length = state.songs.length;
         switch(state.playOrder){
             case 'loop':
                 // 顺序播放
-                if(state.currentIndex == length){
+                if(state.currentIndex == length-1){
                     state.singing = state.songs[0];
-                    state.currentIndex = 1;
-                    console.log('播完了');
+                    state.currentIndex = 0;
                 }else{
+                    state.currentIndex += 1;                    
                     state.singing = state.songs[state.currentIndex];
-                    state.currentIndex += 1;
                 }
                 break;
             case 2:
