@@ -37,12 +37,29 @@ const getters = {
 
 // actions
 const actions = {
-    changeSong: ({state,commit,rootState},payload) => {
-        get(api.getVkey.url,{params:payload.params}).then( res => {
-            let song = payload.msg;
-            song.vkey = res.data.data.items[0].vkey;
-            song.audioSrc = 'http://ws.stream.qqmusic.qq.com/'+payload.params.filename+'?fromtag=0&guid='+rootState.guid+'&vkey='+res.data.data.items[0].vkey;
-            commit('addSong',{song});
+    getLyric:({state,commit,getters,rootState}) => {
+        let params = api.getRecommendSong.params;
+        params.detail.param.song_id = state.singing.id;
+        post(api.getRecommendSong.url,params).then( res => {
+            let data = res.data.detail.data.info.pop().content[0].value;
+            let lyric = getters.initLyric(data);
+            commit('initLyric',{lyric});
+        }).catch( error => {
+
+        })
+    },
+    getAudioSrc:({state,commit,getters,rootState}) => {
+        let params = {
+            guid:rootState.guid,
+            filename:'C400'+state.singing.mid+'.m4a',
+            songmid:state.singing.mid,
+            format:'json',
+            platform:'yqq',
+            cid:205361747
+        };
+        get(api.getVkey.url,{params}).then( res => {
+            let audioSrc = 'http://ws.stream.qqmusic.qq.com/'+params.filename+'?fromtag=0&guid='+rootState.guid+'&vkey='+res.data.data.items[0].vkey;
+            commit('initAudioSrc',{audioSrc})
         }).catch( error => {
             console.log(error)
         })
@@ -51,12 +68,22 @@ const actions = {
 
 // mutations
 const mutations = {
+    // 初次加载歌词
+    initLyric(state,payload){
+        state.singing.lyric = payload.lyric;
+        state.songs[state.currentIndex].lyric = payload.lyric;
+    },
+    // 初次加载播放源
+    initAudioSrc(state,payload){
+        state.singing.audioSrc = payload.audioSrc;
+        state.songs[state.currentIndex].audioSrc = payload.audioSrc;
+    },
+    // 添加歌曲并播放该歌曲
     addSong(state,payload){
-        // 修改状态
         state.singing = payload.song;
         state.songs.push(payload.song);
+        state.currentIndex = state.songs.length - 1;
         state.isPlay = true;
-        state.currentIndex += 1;
     },
     // 点击暂停或播放
     changePlay(state){
@@ -91,12 +118,12 @@ const mutations = {
         state.isPlay = true;
     },
     // 切换歌曲
-    playOther(state,payload){
+    playIndex(state,payload){
         // 判断是否是当前播放的歌曲
-        if(state.currentIndex != (payload.index + 1)){
+        if(state.currentIndex != payload.index){
             state.singing =state.songs[payload.index];
             state.isPlay = true;
-            state.currentIndex = payload.index + 1;
+            state.currentIndex = payload.index;
         }
     }
 }

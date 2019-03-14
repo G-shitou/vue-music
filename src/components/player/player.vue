@@ -12,7 +12,7 @@
                     </div>
                 </div>
             </div>
-            <div class="iconfont" :class="isPlay?'icon-bofang':'icon-bofang1'" @click="changePlaying()"></div>
+            <div class="iconfont" :class="isPlay?'icon-bofang':'icon-bofang1'" @click="changePlay()"></div>
             <div class="iconfont icon-liebiao" @click="showSongs()"></div>
             <audio id="audio" ref="audio" :src="singing.audioSrc" @ended="changeSong()" @timeupdate="changeLyric()"></audio>
         </div>
@@ -24,9 +24,9 @@
                     </div>
                     <ul>
                         <li v-for="(song,index) in songs" :key="index">
-                            <img :src="song.img" alt="">
                             <p class="index">{{index + 1}}</p>
-                            <p class="title" @click="playOther({index})" :class="{active:song.id == singing.id}">{{song.title}} - {{song.singer}}</p>
+                            <img :src="song.img" alt="">                            
+                            <p class="title" @click="playIndex({index})" :class="{active:song.id == singing.id}">{{song.title}} - {{song.singer}}</p>
                             <p class="delete" @click="deleteSongs()"></p>
                         </li>
                     </ul>
@@ -53,27 +53,24 @@ export default {
           songs: state => state.songs,
           singing: state => state.singing,
           isPlay: state => state.isPlay
-      }),
-      ...mapGetters('player',[
-          'initLyric'
-      ])
+      })
   },
   watch:{
       isPlay(now,last){
-          console.log('现在是:'+now);
           this.$nextTick(()=>{
-            this.$refs.audio.load();
-            console.log('isPlay变化了');
             this.isPlay ? this.$refs.audio.play() : this.$refs.audio.pause();
           })
       },
-      singing(){
-          // 格式化歌词
-          this.lyric = this.initLyric(this.singing.lyric);
+      singing(last,old){
+          // 加载播放地址或歌词
+          if(last.audioSrc == '' || last.lyric == ''){
+              this.getAudioSrc();
+              this.getLyric();              
+          }
           clearTimeout(this.timer);
           this.timer = setTimeout(()=>{
               this.$refs.audio.play();
-          })
+          },1000)
       }
   },
   mounted (){
@@ -82,8 +79,11 @@ export default {
   methods:{
       ...mapMutations('player',[
           'changePlay',
-          'changeSong',
-          'playOther'
+          'playIndex'
+      ]),
+      ...mapActions('player',[
+          'getLyric',
+          'getAudioSrc'
       ]),
       // 改变歌词
       changeLyric(){
@@ -91,7 +91,7 @@ export default {
                 this.$refs.lyrics.innerHTML = this.singing.singer
                 return;
             }
-            let lyrics = this.lyric;
+            let lyrics = this.singing.lyric;
             if (lyrics.length == 0){
                 this.$refs.lyrics.innerHTML = '暂无歌词!';
                 return
@@ -103,13 +103,6 @@ export default {
                     break;
                 }
             }
-      },
-      // 暂停播放
-      changePlaying(){
-          // 改变播放状态
-          this.changePlay();
-          // 暂停或播放歌曲
-        //   this.isPlay ? this.$refs.audio.play() : this.$refs.audio.pause();
       },
       // 加载播放列表
       showSongs(){
@@ -235,7 +228,7 @@ export default {
                 img
                     width:.6rem
                     height:.6rem
-                    margin:.1rem 0 .1rem .2rem
+                    margin:.1rem .2rem .1rem 0
                 .index
                     width:.8rem
                     display: -webkit-box
