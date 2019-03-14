@@ -23,14 +23,14 @@
             <!-- 歌曲列表 -->
             <div class="recommendList">
                 <div class="songList">
-                    <li class="song" v-for="(song,index) in recommendList.songlist" :key="song.songid" @click.stop="changeSong({id:song.songid})">
+                    <li class="song" v-for="(song,index) in recommendList.songlist" :key="song.songid" @click.stop="changeSong({song})">
                         <div class="index">
                             <div class="num"> {{ index+1 }} </div>
                             <div class="sort"></div>
                         </div>
                         <div class="name">
-                            <div class="title" :class='{alive:song.songmid == singing.songmid}'>{{song.songname}}</div>
-                            <div class="singer" :class='{alive:song.songmid == singing.songmid}'><font>{{getSinger(song.singer)}} ·</font>{{song.albumname}}</div>
+                            <div class="title" :class='{alive:song.songmid == singing.mid}'>{{song.songname}}</div>
+                            <div class="singer" :class='{alive:song.songmid == singing.mid}'><font>{{getSinger(song.singer)}} ·</font>{{song.albumname}}</div>
                         </div>
                     </li>
                 </div>
@@ -85,39 +85,31 @@ export default {
                 }
             })
         },
-        ...mapActions('recommendList',[
-            'getRecommendSong'
-        ]),
         ...mapMutations('player',[
-            'playOther',
-            'pause'
+            'playIndex',
+            'addSong'
         ]),
         changeSong(obj){
-            this.pause();
             // 判断是否在播放列表里
             let isIn = false;
             for(let i=0;i<this.songs.length;i++){
-                if(this.songs[i].id == obj.id){
+                if(this.songs[i].id == obj.song.songid){
                     isIn = true;
-                    this.playOther({index:i})
+                    this.playIndex({index:i})
                     break;
                 }
             }
             if(!isIn){
-                Indicator.open({
-                    text: '加载中...',
-                    spinnerType: 'fading-circle'
-                });
-                this.getRecommendSong(obj).then( res => {
-                    Indicator.close();
-                }).catch( error => {
-                    Indicator.close();
-                    Toast({
-                        message: '加载失败,网络错误!',
-                        position: 'center',
-                        duration: 5000
-                    });
-                })   
+                let song = {
+                    id:obj.song.songid,
+                    mid:obj.song.songmid,
+                    singer:this.getSinger(obj.song.singer),
+                    img:'https://y.gtimg.cn/music/photo_new/T002R300x300M000'+obj.song.albummid+'.jpg?max_age=2592000',
+                    title:obj.song.songname,
+                    audioSrc:'',
+                    lyric:''
+                }
+                this.addSong({song});
             }
         },
         playAll(){
