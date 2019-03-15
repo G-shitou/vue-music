@@ -1,5 +1,6 @@
 import api from '../../api/api'
 import {get,post} from '../../http/http'
+import { Toast } from 'mint-ui'
 
 
 const state = {
@@ -32,6 +33,18 @@ const getters = {
             }
         })
         return lyric.slice(1);
+    },
+    getSinger:function(){
+        return (arr) => {
+            if(arr.length === 1){
+                return arr[0].name
+            }
+            var singer = '';
+            arr.forEach((value,index,arr) => {
+                singer += value.name + '/'
+            });
+            return singer.substr(0,singer.length-1)
+        }
     }
 }
 
@@ -123,6 +136,49 @@ const mutations = {
             state.isPlay = true;
             state.currentIndex = payload.index;
         }
+    },
+    // 播放全部歌曲
+    playList(state,payload){
+        // 清空播放列表
+        state.songs.length = 0;
+        let songs = payload.songs;
+        for(let i = 0;i<songs.length;i++){
+            if(songs[i].pay.payplay != 1){
+                // 处理演唱者
+                let singer = ''
+                if(songs[i].singer.length === 1){
+                    singer = songs[i].singer[0].name
+                }else{
+                    songs[i].singer.forEach((value,index,arr) => {
+                        singer += value.name + '/'
+                    });
+                    singer = singer.substr(0,singer.length-1)
+                }
+                var song = {
+                    id:songs[i].songid,
+                    mid:songs[i].songmid,
+                    singer,
+                    img:'https://y.gtimg.cn/music/photo_new/T002R300x300M000'+songs[i].albummid+'.jpg?max_age=2592000',
+                    title:songs[i].songname,
+                    audioSrc:'',
+                    lyric:''
+                }
+                if(state.songs.length == 0){
+                    state.singing = song;
+                    state.songs.push(song);
+                    state.currentIndex = 0;
+                    state.isPlay = true;
+                }else{
+                    state.songs.push(song);
+                }
+            }
+        };
+        // 提示已过滤付费歌曲
+        Toast({
+            message: '歌单中付费歌曲已过滤!',
+            position: 'center',
+            duration: 1000
+        });
     }
 }
 

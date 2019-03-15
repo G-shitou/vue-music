@@ -94,7 +94,7 @@ export default {
             }
             let lyrics = this.singing.lyric;
             if (lyrics.length == 0){
-                this.$refs.lyrics.innerHTML = '暂无歌词!';
+                // this.$refs.lyrics.innerHTML = '暂无歌词!';
                 return
             }
             let currentTime = this.$refs.audio ? this.$refs.audio.currentTime * 1000 : 0;
@@ -238,6 +238,9 @@ export default {
                 .title
                     -webkit-flex:1
                     flex:1
+                    white-space: nowrap
+                    text-overflow: ellipsis
+                    overflow: hidden
                 .active
                     color:$mainColor
 </style>

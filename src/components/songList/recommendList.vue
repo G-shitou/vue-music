@@ -87,9 +87,19 @@ export default {
         },
         ...mapMutations('player',[
             'playIndex',
-            'addSong'
+            'addSong',
+            'playList'
         ]),
         changeSong(obj){
+            // 是否是付费歌曲
+            if(obj.song.pay.payplay == 1){
+                Toast({
+                    message: '付费歌曲,暂不支持播放!',
+                    position: 'center',
+                    duration: 1000
+                });
+                return;
+            }
             // 判断是否在播放列表里
             let isIn = false;
             for(let i=0;i<this.songs.length;i++){
@@ -113,11 +123,13 @@ export default {
             }
         },
         playAll(){
-            Toast({
-                message: '暂未开发!',
-                position: 'center',
-                duration: 5000
-            });
+            // Toast({
+            //     message: '付费歌曲已过滤,暂不支持播放!',
+            //     position: 'center',
+            //     duration: 1000
+            // });
+            let songs = this.recommendList.songlist;
+            this.playList({songs});
         }
     }
 }
