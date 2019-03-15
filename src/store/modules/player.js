@@ -90,13 +90,13 @@ const mutations = {
     initAudioSrc(state,payload){
         state.singing.audioSrc = payload.audioSrc;
         state.songs[state.currentIndex].audioSrc = payload.audioSrc;
+        state.isPlay = true;        
     },
     // 添加歌曲并播放该歌曲
     addSong(state,payload){
         state.singing = payload.song;
         state.songs.push(payload.song);
         state.currentIndex = state.songs.length - 1;
-        state.isPlay = true;
     },
     // 点击暂停或播放
     changePlay(state){
@@ -167,7 +167,6 @@ const mutations = {
                     state.singing = song;
                     state.songs.push(song);
                     state.currentIndex = 0;
-                    state.isPlay = true;
                 }else{
                     state.songs.push(song);
                 }
