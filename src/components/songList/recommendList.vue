@@ -123,11 +123,6 @@ export default {
             }
         },
         playAll(){
-            // Toast({
-            //     message: '付费歌曲已过滤,暂不支持播放!',
-            //     position: 'center',
-            //     duration: 1000
-            // });
             let songs = this.recommendList.songlist;
             this.playList({songs});
         }

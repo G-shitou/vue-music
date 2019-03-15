@@ -4,7 +4,7 @@
       <mt-swipe :auto="4000">
         <mt-swipe-item v-for="port in slider" :key="port.id">
             <a :href="port.linkUrl">
-                <img :src="port.picUrl" alt="">
+                <img v-lazy="port.picUrl" alt="">
             </a>
         </mt-swipe-item>
       </mt-swipe>
@@ -14,7 +14,7 @@
       <div class="songSheets">
         <div v-for="songSheet in songSheets" :key="songSheet.cover" class="songSheet" @click.stop="goSongList(songSheet.content_id)">
           <div class="cover">
-            <img :src="songSheet.cover" alt="" class="coverImg">
+            <img v-lazy="songSheet.cover" alt="" class="coverImg">
             <div class="playIcon"></div>
           </div>
           <p class="title"> {{songSheet.title}} </p>

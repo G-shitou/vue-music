@@ -25,7 +25,7 @@
                     <ul>
                         <li v-for="(song,index) in songs" :key="index">
                             <p class="index">{{index + 1}}</p>
-                            <img :src="song.img" alt="">                            
+                            <img v-lazy="song.img" alt="">                            
                             <p class="title" @click="playIndex({index})" :class="{active:song.id == singing.id}">{{song.title}} - {{song.singer}}</p>
                             <p class="delete" @click="deleteSongs()"></p>
                         </li>
