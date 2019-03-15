@@ -42,5 +42,19 @@ export default {
     //获取歌曲token
     getVkey:{
         url:'/api/base/fcgi-bin/fcg_music_express_mobile3.fcg'
+    },
+    // 获取排行榜
+    getRanking:{
+        url:'/api/v8/fcg-bin/fcg_myqq_toplist.fcg',
+        params:{
+            g_tk: 5381,
+            uin: 0,
+            format: 'json',
+            inCharset: 'utf-8',
+            outCharset: 'utf-8',
+            notice: 0,
+            platform: 'h5',
+            needNewCode: 1
+        }
     }
 }
