@@ -2,7 +2,7 @@
     <div class="ranking">
         <div v-for="(rank,index) in rankList" :key="index" class="rank">
             <div class="pictrue">
-                <img v-lazy="rank.picUrl" alt="">
+                <img :src="rank.picUrl" alt="">
                 <span class="listen"></span>
                 <span class="listenCount">{{rank.listenCount}}</span>
             </div>
@@ -10,7 +10,9 @@
                 <div class="title">{{rank.topTitle}}</div>
                 <ul class="songList">
                     <li v-for="(song,index) in rank.songList" :key="index">
-                        {{index+1}}   {{song.songname}} - {{song.singername}}
+                        <font class="index"> {{ index+1 }} </font>
+                        <font class="name"> {{ song.songname }} </font>
+                        <font class="singer"> - {{song.singername}}</font>
                     </li>
                 </ul>
             </div>
@@ -68,11 +70,11 @@ export default {
             overflow:hidden
             margin-left:.2rem
             .title
-                font-size:.33rem
-                line-height:.33rem
+                font-size:.3rem
+                line-height:.7rem
             .songList
                 width:100%
-                height:1.67rem
+                height:1.3rem
                 overflow:hidden
                 display:-webkit-box
                 -webkit-line-clamp:3
@@ -82,4 +84,9 @@ export default {
                     text-overflow: ellipsis                      
                     overflow:hidden
                     font-size:.25rem
+                    line-height:.43333rem
+                    .index,.singer
+                        color:$grayColor
+                    .index
+                        margin-right:.1rem
 </style>
