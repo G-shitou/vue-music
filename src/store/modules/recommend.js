@@ -41,7 +41,7 @@ const actions = {
             get(api.recommendList.url,{
                 params
             }).then(res => {
-                let resultData = JSON.parse(res.data.substring(13, res.data.length - 1));
+                let resultData = res.data;
                 commit('recommendList/initRecommendList',{recommendList:resultData.cdlist[0]},{ root: true });
                 resolve()
             }).catch(error => {

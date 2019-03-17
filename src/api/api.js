@@ -24,7 +24,8 @@ export default {
             'type':1,
             'utf8':1,
             'inCharset':'utf8',
-            'outCharset':'utf-8'
+            'outCharset':'utf-8',
+            'format': 'json'
         }
     },
     // 推荐歌单中获取歌曲信息
