@@ -57,5 +57,22 @@ export default {
             platform: 'h5',
             needNewCode: 1
         }
+    },
+    // 获取排行榜榜单详情
+    getRankingList:{
+        url:'/api/v8/fcg-bin/fcg_v8_toplist_cp.fcg',
+        params:{
+            g_tk: 5381,
+            uin: 0,
+            format: 'json',
+            inCharset: 'utf-8',
+            outCharset: 'utf-8',
+            notice: 0,
+            platform: 'h5',
+            needNewCode: 1,
+            tpl:3,
+            page:'detail',
+            type:'top'
+        }
     }
 }
