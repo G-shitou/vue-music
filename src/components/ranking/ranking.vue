@@ -1,6 +1,6 @@
 <template>
     <div class="ranking">
-        <div v-for="(rank,index) in rankList" :key="index" class="rank">
+        <div v-for="(rank,index) in rankList" :key="index" v-show="rank.topTitle == '巅峰榜·MV' ? false : true" class="rank" @click="goSongList(rank.id)">
             <div class="pictrue">
                 <img :src="rank.picUrl" alt="">
                 <span class="listen"></span>
@@ -23,24 +23,48 @@
 <script>
 import api from '../../api/api'
 import {get,post} from '../../http/http'
+import { Toast } from 'mint-ui'
+import { Indicator } from 'mint-ui'
+import { mapState , mapActions} from 'vuex'
 export default {
   name: 'ranking',
   data(){
       return {
-          rankList:[]
+          
       }
   },
-  created(){
-      // 请求排行榜list
-      get(api.getRanking.url,{params:api.getRanking.params}).then( res => {
-          this.rankList = res.data.data.topList;
-      }).catch( error => {
-          console.log(error);
+  computed:{
+      ...mapState('ranking',{
+          rankList: state => state.rankList
       })
   },
-  mounted(){
-      
-  }
+  created(){
+      this.getRanking();
+  },
+  methods:{
+        ...mapActions('ranking',[
+            'getRanking',
+            'getTopList'
+        ]),
+        goSongList (id) {
+            Indicator.open({
+                text: '加载中...',
+                spinnerType: 'fading-circle'
+            });
+            this.getTopList(id).then( () => {
+                // 请求数据成功后,打开歌单
+                Indicator.close();
+                this.$router.push('rankingList')
+            }).catch( () => {
+                Indicator.close();
+                Toast({
+                    message: '加载失败,网络错误!',
+                    position: 'center',
+                    duration: 5000
+                });
+            });
+        }
+    }
 }
 </script>
 <style scoped lang="stylus">
