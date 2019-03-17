@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import index from '../components/index'
 import home from '../components/home/home'
 import recommendList from '../components/songList/recommendList'
-
+import rankingList from '../components/songList/rankingList'
 Vue.use(Router)
 
 export default new Router({
@@ -24,6 +24,11 @@ export default new Router({
       path: '/recommendList',
       name: 'recommendList',
       component: recommendList
+    },
+    {
+      path:'/rankingList',
+      name:'rankingList',
+      component:rankingList
     }
   ]
 })
