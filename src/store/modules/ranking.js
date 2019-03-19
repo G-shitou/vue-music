@@ -6,7 +6,7 @@ const state = {
     // 排行榜数据
     rankList: [],
     // 排行榜详情
-    rank: []
+    rank: {}
 }
 
 // getters
