@@ -12,8 +12,8 @@
                     </div>
                 </div>
             </div>
-            <div class="iconfont" :class="isPlay?'icon-bofang':'icon-bofang1'" @click="changePlay()"></div>
-            <div class="iconfont icon-liebiao" @click="showSongs()"></div>
+            <div class="iconfont" :class="isPlay?'icon-pause':'icon-play'" @click="changePlay()"></div>
+            <div class="iconfont icon-musicmenu" @click="showSongs()"></div>
             <audio id="audio" ref="audio" :src="singing.audioSrc" @ended="playNext()" @timeupdate="changeLyric()"></audio>
         </div>
         <transition name="fade">
@@ -172,6 +172,8 @@ export default {
             display:-webkit-box
             -webkit-box-align:center
             -webkit-box-pack:center
+        .icon-play,.icon-pause
+            font-size:.7rem
         .lyric
             -webkit-box-flex:1
             -moz-box-flex:1
