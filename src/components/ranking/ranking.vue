@@ -3,8 +3,8 @@
         <div v-for="(rank,index) in rankList" :key="index" v-show="rank.topTitle == '巅峰榜·MV' ? false : true" class="rank" @click="goSongList(rank.id)">
             <div class="pictrue">
                 <img :src="rank.picUrl" alt="">
-                <span class="listen"></span>
-                <span class="listenCount">{{rank.listenCount}}</span>
+                <span class="iconfont icon-listen"></span>
+                <span class="listenCount">{{initCount(rank.listenCount)}}</span>
             </div>
             <div class="songs">
                 <div class="title">{{rank.topTitle}}</div>
@@ -36,7 +36,10 @@ export default {
   computed:{
       ...mapState('ranking',{
           rankList: state => state.rankList
-      })
+      }),
+      initCount: () => (count) => {
+          return (Math.round(parseInt(count) / 100) / 100) + '万';
+      }
   },
   created(){
       this.getRanking();
@@ -88,6 +91,15 @@ export default {
             img
                 width:100%
                 height:100%
+            .iconfont,.listenCount
+                position:absolute
+                bottom:.05rem
+                left:.1rem
+                color:#fff
+                z-index:1
+            .listenCount
+                left:.4rem
+                font-size:.25rem
         .songs
             -webkit-flex:1
             flex:1

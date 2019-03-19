@@ -21,21 +21,38 @@ const getters = {
             return '第'+day+'天';
         }
     },
-    initSort:(state) => (index) => {
+    initCount:(state) => (index) => {
         let obj = state.rank.songlist[index];
         if(Number(obj.old_count) == 0){
             return 'new';    
         }
         if(Number(obj.cur_count) == index + 1){
             if(Number(obj.cur_count) > Number(obj.old_count)){
-                return '↓'+ (Number(obj.cur_count) - Number(obj.old_count))
+                return (Number(obj.cur_count) - Number(obj.old_count))
             }else if(Number(obj.cur_count) < Number(obj.old_count)){
-                return '↑'+ (Number(obj.old_count) - Number(obj.cur_count))
+                return (Number(obj.old_count) - Number(obj.cur_count))
             }else{
-                return '-';
+                return '';
             }
         }else{
-            return '↑' + Number(obj.in_count) * 100 + '%';
+            return Math.round(Number(obj.in_count) * 100) + '%';
+        }
+    },
+    initIcon:(state) => (index) => {
+        let obj = state.rank.songlist[index];
+        if(Number(obj.old_count) == 0){
+            return 'new';    
+        }
+        if(Number(obj.cur_count) == index + 1){
+            if(Number(obj.cur_count) > Number(obj.old_count)){
+                return 'icon-down';
+            }else if(Number(obj.cur_count) < Number(obj.old_count)){
+                return 'icon-up';
+            }else{
+                return 'icon-minus';
+            }
+        }else{
+            return 'icon-up';
         }
     }
 }

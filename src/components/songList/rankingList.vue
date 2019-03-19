@@ -27,7 +27,10 @@
                     <li class="song" v-for="(song,index) in rank.songlist" :key="song.data.songid" @click.stop="changeSong({song})">
                         <div class="index">
                             <div class="num" :class="index <=2 ? 'active' : ''"> {{ index+1 }} </div>
-                            <div class="sort">{{initSort(index)}}</div>
+                            <div class="sort">
+                                <span class="iconfont" :class='initIcon(index)'></span>
+                                <span>{{initCount(index)}}</span>
+                            </div>
                         </div>
                         <div class="name">
                             <div class="title" :class='{alive:song.data.songmid == singing.mid}'>{{song.data.songname}}</div>
@@ -49,7 +52,7 @@ export default {
   name: 'rankingList',
   data () {
       return {
-          recommendList:{}
+          rankSongs:[]
       }
   },
   computed: {
@@ -62,7 +65,8 @@ export default {
     }),
     ...mapGetters('ranking',[
         'initsubtitle',
-        'initSort'
+        'initCount',
+        'initIcon'
     ]),
     getSinger:function(){
         return (arr) => {
@@ -78,7 +82,18 @@ export default {
     }
   },
   mounted (){
-      this.initScroll()
+        this.initScroll();
+        // 格式化songs,方便playAll的调用
+        for(let i =0;i<this.rank.songlist.length;i++){
+            this.rankSongs.push({
+                songid:this.rank.songlist[i].data.songid,
+                songmid:this.rank.songlist[i].data.songmid,
+                singer:this.rank.songlist[i].data.singer,
+                albummid:this.rank.songlist[i].data.albummid,
+                songname:this.rank.songlist[i].data.songname,
+                pay:this.rank.songlist[i].data.pay
+            })
+        };
   },
   methods:{
         initScroll(){
@@ -97,8 +112,9 @@ export default {
             'playList'
         ]),
         changeSong(obj){
+            let _song = obj.song.data;
             // 是否是付费歌曲
-            if(obj.song.pay.payplay == 1){
+            if(_song.pay.payplay == 1){
                 Toast({
                     message: '付费歌曲,暂不支持播放!',
                     position: 'center',
@@ -109,7 +125,7 @@ export default {
             // 判断是否在播放列表里
             let isIn = false;
             for(let i=0;i<this.songs.length;i++){
-                if(this.songs[i].id == obj.song.songid){
+                if(this.songs[i].id == _song.songid){
                     isIn = true;
                     this.playIndex({index:i})
                     break;
@@ -117,20 +133,19 @@ export default {
             }
             if(!isIn){
                 let song = {
-                    id:obj.song.songid,
-                    mid:obj.song.songmid,
-                    singer:this.getSinger(obj.song.singer),
-                    img:'https://y.gtimg.cn/music/photo_new/T002R300x300M000'+obj.song.albummid+'.jpg?max_age=2592000',
-                    title:obj.song.songname,
+                    id:_song.songid,
+                    mid:_song.songmid,
+                    singer:this.getSinger(_song.singer),
+                    img:'https://y.gtimg.cn/music/photo_new/T002R300x300M000'+_song.albummid+'.jpg?max_age=2592000',
+                    title:_song.songname,
                     audioSrc:'',
                     lyric:''
-                }
+                };
                 this.addSong({song});
             }
         },
         playAll(){
-            let songs = this.recommendList.songlist;
-            this.playList({songs});
+            this.playList({songs:this.rankSongs});
         }
     }
 }
@@ -248,12 +263,27 @@ export default {
                         -webkit-box-align: center
                         width: .9rem
                         font-size:.33rem
+                        .num
+                            font-size:.33rem
+                            margin-top:.05rem
                         .active
-                            color:#FF8F70
+                            color:$iconUp
                         .sort
                             height:.36rem
-                            font-size:.25rem
+                            line-height:.36rem
                             margin-top:.1rem
+                            display: -webkit-box
+                            -webkit-box-pack: center
+                            font-size:0
+                            span
+                                font-size:.1rem
+                            .icon-up
+                                color:$iconUp
+                            .icon-down
+                                color:$mainColor
+                            .new
+                                ~span
+                                    color:$iconUp
                     .name
                         -webkit-box-flex:1
                         color:$redColor
