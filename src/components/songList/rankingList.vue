@@ -81,19 +81,24 @@ export default {
         }
     }
   },
+  watch:{
+      rank(){
+            this.rankSongs.length = 0;
+            // 格式化songs,方便playAll的调用
+            for(let i =0;i<this.rank.songlist.length;i++){
+                this.rankSongs.push({
+                    songid:this.rank.songlist[i].data.songid,
+                    songmid:this.rank.songlist[i].data.songmid,
+                    singer:this.rank.songlist[i].data.singer,
+                    albummid:this.rank.songlist[i].data.albummid,
+                    songname:this.rank.songlist[i].data.songname,
+                    pay:this.rank.songlist[i].data.pay
+                })
+            };
+      }
+  },
   mounted (){
         this.initScroll();
-        // 格式化songs,方便playAll的调用
-        for(let i =0;i<this.rank.songlist.length;i++){
-            this.rankSongs.push({
-                songid:this.rank.songlist[i].data.songid,
-                songmid:this.rank.songlist[i].data.songmid,
-                singer:this.rank.songlist[i].data.singer,
-                albummid:this.rank.songlist[i].data.albummid,
-                songname:this.rank.songlist[i].data.songname,
-                pay:this.rank.songlist[i].data.pay
-            })
-        };
   },
   methods:{
         initScroll(){
