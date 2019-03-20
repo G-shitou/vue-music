@@ -17,10 +17,10 @@
             </li>
         </div>
         <!-- 单纯的歌单或专辑列表 -->
-        <div class="songList" v-if='!sort'>
+        <div class="songList" v-else>
             <li class="song" v-for="(song,index) in songlist" :key="song.songid" @click.stop="changeSong({song})">
                 <div class="index">
-                    <div class="num"> {{ index+1 }} </div>
+                    <div class="num maincolor"> {{ index+1 }} </div>
                     <div class="sort"></div>
                 </div>
                 <div class="name">
@@ -128,6 +128,8 @@ export default {
                 .num
                     font-size:.33rem
                     margin-top:.05rem
+                .maincolor
+                    color:$mainColor
                 .active
                     color:$iconUp
                 .sort
