@@ -74,5 +74,28 @@ export default {
             page:'detail',
             type:'top'
         }
+    },
+    // 热门搜索
+    getHotKey:{
+        url:'/api/splcloud/fcgi-bin/gethotkey.fcg',
+        params:{
+            g_tk: 5381,
+            uin: 0,
+            format: 'json',
+            inCharset: 'utf-8',
+            outCharset: 'utf-8',
+            notice: 0,
+            platform: 'h5',
+            needNewCode: 1
+        }
+    },
+    // 搜索接口
+    search:{
+        url:'/api/soso/fcgi-bin/search_for_qq_cp',
+        params:{
+            format: 'json',
+            p:1,
+            n:20
+        }
     }
 }
