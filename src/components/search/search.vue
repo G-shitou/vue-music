@@ -12,36 +12,17 @@
         <!-- 搜索结果列表 -->
         <div class='search_result' v-show='showSearchResult'>
             <!-- 搜索的是歌曲 -->
-            <ul v-if='searchResult.zhida&&searchResult.zhida.type==0'>
-                <li v-for='(item,index) in searchResult.song.list' :key='index' class='song' @click.stop="changeSong({song:item})">
-                    <div class='index'>{{index+1}}</div>
-                    <div class='info'>
-                        <p class='title' :class='{alive:item.songmid == singing.mid}'>{{item.songname}}</p>
-                        <p class='singer' :class='{alive:item.songmid == singing.mid}'>{{getSinger(item.singer)}}</p>
-                    </div>
-                </li>
-            </ul>
-            <!-- 搜索的是歌手 -->
-            <ul v-else-if="searchResult.zhida&&searchResult.zhida.type==2">
+            <list-content v-if='searchResult.zhida&&searchResult.zhida.type==0' :songlist='searchResult.song.list' :sort='false'></list-content>
+            <!-- 搜索的是歌手或者专辑 -->
+            <ul v-else-if="searchResult.zhida&&searchResult.zhida.type!=0">
                 <li class='singer' @click.stop='showPage(searchResult.zhida)'>
                     <div class='photo'>
                         <img :src='initIMG'>
                     </div>
                     <div class='info'>
-                        <p class='name'>{{searchResult.zhida.singername}}</p>
-                        <p class='num'><font>单曲 : </font> {{ searchResult.zhida.songnum }}  <font>专辑 : </font> {{ searchResult.zhida.albumnum }}</p>
-                    </div>
-                </li>
-            </ul>
-            <!-- 搜索的是专辑 -->
-            <ul v-else-if='searchResult.zhida&&searchResult.zhida.type==3'>
-                <li class='album' @click.stop='showPage(searchResult.zhida)'>
-                    <div class='photo'>
-                        <img :src='initIMG'>
-                    </div>
-                    <div class='info'>
-                        <p class='title'>{{searchResult.zhida.albumname}}</p>
-                        <p class='singer'>{{searchResult.zhida.singername}}</p>
+                        <p class='name'>{{searchResult.zhida.singername || searchResult.zhida.albumname}}</p>
+                        <p class='num' v-if='searchResult.zhida.songnum'><font>单曲 : </font> {{ searchResult.zhida.songnum }}  <font>专辑 : </font> {{ searchResult.zhida.albumnum }}</p>
+                        <p class='singer' v-if='searchResult.zhida.albummid'>{{searchResult.zhida.singername}}</p>
                     </div>
                 </li>
             </ul>
@@ -60,7 +41,7 @@ import { Toast } from 'mint-ui'
 import { Indicator } from 'mint-ui'
 import api from '../../api/api'
 import {get,post} from '../../http/http'
-import { mapState , mapMutations , mapGetters} from 'vuex'
+import listContent from '../common/listContent'
 export default {
     name: 'search',
     data(){
@@ -90,36 +71,21 @@ export default {
         });
     },
     computed: {
-        ...mapState('player',{
-            singing: state => state.singing,
-            songs: state => state.songs
-        }),
         initIMG () {
             if(this.searchResult.zhida.singermid){
                 return 'https://y.gtimg.cn/music/photo_new/T001R68x68M000' + this.searchResult.zhida.singermid + '.jpg';
             }else{
                 return 'https://y.gtimg.cn/music/photo_new/T002R68x68M000' + this.searchResult.zhida.albummid + '.jpg';
             }
-        },
-        getSinger:() => (arr) => {
-            if(arr.length === 1){
-                return arr[0].name
-            }
-            var singer = '';
-            arr.forEach((value,index,arr) => {
-                singer += value.name + '/'
-            });
-            return singer.substr(0,singer.length-1)
         }
+    },
+    components:{
+        listContent
     },
     mounted(){
 
     },
     methods:{
-        ...mapMutations('player',[
-            'playIndex',
-            'addSong'
-        ]),
         // 搜索框输入时
         inputChange(){
             this.clear = this.w == '' ? false : true;
@@ -176,40 +142,6 @@ export default {
         searchHot(w){
             this.w = w;
             this.search();
-        },
-        // 点击歌曲播放
-        changeSong(obj){
-            let _song = obj.song;
-            // 是否是付费歌曲
-            if(_song.pay.payplay == 1){
-                Toast({
-                    message: '付费歌曲,暂不支持播放!',
-                    position: 'center',
-                    duration: 1000
-                });
-                return;
-            }
-            // 判断是否在播放列表里
-            let isIn = false;
-            for(let i=0;i<this.songs.length;i++){
-                if(this.songs[i].id == _song.songid){
-                    isIn = true;
-                    this.playIndex({index:i})
-                    break;
-                }
-            }
-            if(!isIn){
-                let song = {
-                    id:_song.songid,
-                    mid:_song.songmid,
-                    singer:this.getSinger(_song.singer),
-                    img:'https://y.gtimg.cn/music/photo_new/T002R300x300M000'+_song.albummid+'.jpg?max_age=2592000',
-                    title:_song.songname,
-                    audioSrc:'',
-                    lyric:''
-                };
-                this.addSong({song});
-            }
         },
         // 点击搜索后的歌手或专辑
         showPage(obj){
@@ -302,7 +234,7 @@ export default {
         width:100%
         height:auto
         margin-bottom:.3rem
-        li.singer,li.song,li.album
+        li.singer
             width:100%
             height:1rem
             display:-webkit-box
@@ -324,7 +256,7 @@ export default {
                 -webkit-box-orient:vertical
                 -webkit-box-pack:center
                 margin-left:.1rem
-                .name,.title
+                .name
                     font-size:.3rem
                     white-space: nowrap
                     text-overflow: ellipsis                      
@@ -334,17 +266,4 @@ export default {
                     color:$grayColor
                     font:nth-child(2)
                         margin-left:.1rem
-                .alive
-                    color:$mainColor
-        li.song
-            .index
-                width:.7rem
-                height:1rem
-                line-height:1rem
-                font-size:.33rem
-                text-align:center
-                color:$mainColor
-        li.album
-            .photo
-                border-radius:0
 </style>
