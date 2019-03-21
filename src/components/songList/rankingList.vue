@@ -74,7 +74,19 @@ export default {
             'playList'
         ]),
         playAll(){
-            this.playList({songs:this.rankSongs});
+            // 添加校验watch中的songs是否格式化完成，并设置遮罩
+            // 歌曲列表歌曲太多会导致点击之后等待一段3,4秒空白时间,加遮罩防止多次点击
+            Indicator.open({
+                text: '加载中...',
+                spinnerType: 'fading-circle'
+            });
+            this.timer = setInterval(() => {
+                if(this.rank.songlist.length == this.rankSongs.length){
+                    Indicator.close();
+                    this.playList({songs:this.rankSongs});
+                    clearInterval(this.timer);
+                }
+            },500)
         }
     }
 }
