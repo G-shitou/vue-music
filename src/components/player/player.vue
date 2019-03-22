@@ -17,7 +17,7 @@
             <audio id="audio" ref="audio" :src="singing.audioSrc" @ended="playNext()" @timeupdate="changeLyric()"></audio>
         </div>
         <transition name="fade">
-            <div class="songList" v-show="showList">
+            <div class="SongList" v-show="showList">
                 <div class="content">
                     <div class="close">
                         <font>播放列表</font>
@@ -109,14 +109,14 @@ export default {
       showSongs(){
         this.showList = !this.showList;
         this.$nextTick(() => {
-            this.showList&&this.myscroll.refresh();
+            this.showList&&this.myscroll ? this.myscroll.refresh() : this.initScroll();
         })
       },
       initScroll(){
-        this.myscroll = new BScroll('.songList',{click:true});
+        this.myscroll = new BScroll('.SongList',{click:true});
         this.$nextTick(()=>{
             if(!this.myscroll){
-                this.myscroll = new BScroll('.songList',{click:true})
+                this.myscroll = new BScroll('.SongList',{click:true})
             }else{
                 this.myscroll.refresh();
             }
@@ -202,7 +202,7 @@ export default {
         transition: all .5s
     .fade-enter,.fade-leave-to
         transform: translateY(100%)
-    .songList
+    .SongList
         position:absolute
         top:-4rem
         left:0
@@ -214,7 +214,7 @@ export default {
         box-shadow: 0px -1px 0 0 $mainColor
         overflow:hidden
         .content
-            width:100
+            width:100%
             .close
                 margin:0 auto
                 text-align:center
