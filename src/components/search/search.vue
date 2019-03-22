@@ -12,20 +12,21 @@
         <!-- 搜索结果列表 -->
         <div class='search_result' v-show='showSearchResult'>
             <!-- 搜索的是歌曲 -->
-            <list-content v-if='searchResult.zhida&&searchResult.zhida.type==0' :songlist='searchResult.song.list' :sort='false'></list-content>
-            <!-- 搜索的是歌手或者专辑 -->
-            <ul v-else-if="searchResult.zhida&&searchResult.zhida.type!=0">
+            <list-content :songlist='searchResult.song.list' :sort='false'></list-content>
+            <p class='searchMore' @click='searchMore()'>点击加载更多歌曲</p>
+            <!-- 搜索的是歌手或者专辑   专辑和歌手页面不再展示了 所有歌曲都在列表展示-->
+            <!-- <ul v-else-if="searchResult.zhida&&searchResult.zhida.type!=0">
                 <li class='singer' @click.stop='showPage(searchResult.zhida)'>
                     <div class='photo'>
                         <img :src='initIMG'>
                     </div>
                     <div class='info'>
-                        <p class='name'>{{searchResult.zhida.singername || searchResult.zhida.albumname}}</p>
+                        <p class='name'>{{searchResult.zhida.albumname || searchResult.zhida.singername}}</p>
                         <p class='num' v-if='searchResult.zhida.songnum'><font>单曲 : </font> {{ searchResult.zhida.songnum }}  <font>专辑 : </font> {{ searchResult.zhida.albumnum }}</p>
                         <p class='singer' v-if='searchResult.zhida.albummid'>{{searchResult.zhida.singername}}</p>
                     </div>
                 </li>
-            </ul>
+            </ul> -->
         </div>
         <!-- 热门搜索     根据cancel判断是否显示,只显示前7个加特殊推荐 -->
         <div class='hot_search' v-show='!cancel'>
@@ -54,7 +55,11 @@ export default {
             w:'',
             clear:false,
             cancel:false,
-            searchResult:{},
+            searchResult:{
+                song:{
+                    list:[]
+                }
+            },
             showSearchResult:false
         }
     },
@@ -113,7 +118,7 @@ export default {
             this.clear = false;
         },
         // 搜索关键字
-        search(){
+        search(n){
             Indicator.open({
                 text: '加载中...',
                 spinnerType: 'fading-circle'
@@ -121,13 +126,20 @@ export default {
             this.cancel = true;
             let params = api.search.params;
             params.w = this.w;
+            if(n){
+                params.p = n
+            }
             get(api.search.url,{
                 params
             }).then(res => {
                 Indicator.close();
                 console.log(res.data.data);
-                this.searchResult = res.data.data;
-                this.showSearchResult = true;
+                if(n){
+                    this.searchResult.song.list = this.searchResult.song.list.concat(res.data.data.song.list);
+                }else{
+                    this.searchResult = res.data.data;
+                    this.showSearchResult = true;
+                }
             }).catch(error => {
                 Indicator.close();
                 Toast({
@@ -143,13 +155,11 @@ export default {
             this.w = w;
             this.search();
         },
-        // 点击搜索后的歌手或专辑
-        showPage(obj){
-            Toast({
-                message: '歌手和专辑暂未开发,仅支持搜索歌曲播放!',
-                position: 'center',
-                duration: 1000
-            });
+        // 加载更多歌曲
+        searchMore(){
+            let size = this.searchResult.song.list.length;
+            let n = size/20 + 1;
+            this.search(n)
         }
     }
 }
@@ -234,36 +244,9 @@ export default {
         width:100%
         height:auto
         margin-bottom:.3rem
-        li.singer
-            width:100%
-            height:1rem
-            display:-webkit-box
-            -webkit-box-pack:center
-            box-shadow: 0px 0.3px 0 0 $grayColor
-            .photo
-                width:.8rem
-                height:.8rem
-                margin:.1rem .2rem
-                border-radius:.4rem
-                overflow:hidden
-                img
-                    width:100%
-                    height:100%
-            .info
-                -webkit-box-flex:1
-                height:100%
-                display:-webkit-box
-                -webkit-box-orient:vertical
-                -webkit-box-pack:center
-                margin-left:.1rem
-                .name
-                    font-size:.3rem
-                    white-space: nowrap
-                    text-overflow: ellipsis                      
-                    overflow:hidden
-                .num,.singer
-                    font-size:.2rem
-                    color:$grayColor
-                    font:nth-child(2)
-                        margin-left:.1rem
+        .searchMore
+            margin:0 auto
+            text-align:center
+            font-size:.25rem
+            color:$mainColor
 </style>
