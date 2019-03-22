@@ -61,16 +61,26 @@ export default {
             this.isPlay ? this.$refs.audio.play() : this.$refs.audio.pause();
           })
       },
-      singing(last,old){
-          // 加载播放地址或歌词
-          if(last.audioSrc == '' || last.lyric == ''){
-              this.getAudioSrc();
-              this.getLyric();              
-          }
-          clearTimeout(this.timer);
-          this.timer = setTimeout(()=>{
-              this.$refs.audio.play();
-          },1000)
+      singing:{
+            immediate:true,
+            deep:true,
+            handler(last,old){
+                // 加载播放地址或歌词
+                if(last.lyric == ''){
+                    this.getLyric();  
+                };
+                if(last.audioSrc == ''){
+                    this.getAudioSrc();
+                };
+                if(last.audioSrc != ''){
+                    console.log(last);
+                    this.$refs.audio.play();
+                }
+                // this.timer = setTimeout(()=>{
+                //     this.$refs.audio.play();
+                // },1000)
+                // clearTimeout(this.timer);
+            }
       }
   },
   mounted (){
@@ -93,9 +103,12 @@ export default {
                 return;
             }
             let lyrics = this.singing.lyric;
-            if (lyrics.length == 0){
-                // this.$refs.lyrics.innerHTML = '暂无歌词!';
-                return
+            if (lyrics === ''){
+                this.$refs.lyrics.innerHTML = '歌词请求中...';
+                return;
+            }else if(lyrics.length == 0){
+                this.$refs.lyrics.innerHTML = '暂无歌词!';
+                return;
             }
             let currentTime = this.$refs.audio ? this.$refs.audio.currentTime * 1000 : 0;
             for(let i =0;i<lyrics.length;i++){
