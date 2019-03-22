@@ -18,7 +18,7 @@
         </div>
         <!-- 单纯的歌单或专辑列表 -->
         <div class="songList" v-else>
-            <li class="song" v-for="(song,index) in songlist" :key="song.songid" @click.stop="changeSong({song})">
+            <li class="song" v-for="(song,index) in songlist" :key="index" @click.stop="changeSong({song})">
                 <div class="index">
                     <div class="num maincolor"> {{ index+1 }} </div>
                     <div class="sort"></div>
