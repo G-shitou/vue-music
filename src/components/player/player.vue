@@ -110,7 +110,7 @@ export default {
             }
             let currentTime = this.$refs.audio ? this.$refs.audio.currentTime * 1000 : 0;
             for(let i =0;i<lyrics.length;i++){
-                if(lyrics[i].time <= currentTime && currentTime < lyrics[i+1].time){
+                if(lyrics[i].time <= currentTime && lyrics[i+1] && currentTime < lyrics[i+1].time){
                     this.$refs.lyrics.innerHTML = (lyrics[i]) ? lyrics[i].text : '';
                     break;
                 }
