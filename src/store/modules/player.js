@@ -113,6 +113,10 @@ const mutations = {
             case 'loop':
                 // 顺序播放
                 if(state.currentIndex == length-1){
+                    if(length == 1){
+                        state.isPlay = false;
+                        state.singing = {};
+                    }
                     state.singing = state.songs[0];
                     state.currentIndex = 0;
                 }else{
