@@ -58,6 +58,7 @@ export default {
   watch:{
       isPlay(now,last){
           this.$nextTick(()=>{
+              console.log(this.isPlay);
             this.isPlay ? this.$refs.audio.play() : this.$refs.audio.pause();
           })
       },
@@ -73,13 +74,10 @@ export default {
                     this.getAudioSrc();
                 };
                 if(last.audioSrc != ''){
-                    console.log(last);
-                    this.$refs.audio.play();
+                    this.$nextTick(()=>{
+                        this.$refs.audio.play();
+                    })
                 }
-                // this.timer = setTimeout(()=>{
-                //     this.$refs.audio.play();
-                // },1000)
-                // clearTimeout(this.timer);
             }
       }
   },
@@ -112,8 +110,8 @@ export default {
             }
             let currentTime = this.$refs.audio ? this.$refs.audio.currentTime * 1000 : 0;
             for(let i =0;i<lyrics.length;i++){
-                if(lyrics[i].time >= currentTime){
-                    this.$refs.lyrics.innerHTML = (lyrics[i-1]) ? lyrics[i-1].text : '';
+                if(lyrics[i].time <= currentTime && currentTime < lyrics[i+1].time){
+                    this.$refs.lyrics.innerHTML = (lyrics[i]) ? lyrics[i].text : '';
                     break;
                 }
             }
