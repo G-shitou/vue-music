@@ -8,7 +8,6 @@
 </template>
 <script>
 import home from '../home/home'
-import recommendList from '../songList/recommendList'
 import player from '../player/player'
 export default {
     name: 'index',
@@ -19,7 +18,6 @@ export default {
     },
     components: {
         home,
-        recommendList,
         player
     },
     mounted (){
