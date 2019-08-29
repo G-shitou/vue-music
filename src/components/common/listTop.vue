@@ -86,7 +86,9 @@ export default {
                 position:relative
                 p
                     display: -webkit-box
+                    /*! autoprefixer: off */
                     -webkit-box-orient: vertical
+                    /* autoprefixer: on */
                     -webkit-line-clamp: 1
                     overflow:hidden
                     color:$wihteColor

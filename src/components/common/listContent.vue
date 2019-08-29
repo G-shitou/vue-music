@@ -2,7 +2,7 @@
     <div class="listContent">
         <!-- 排行榜列表  表现有所不同，数据格式也不同 -->
         <div class="songList" v-if="sort">
-            <li class="song" v-for="(song,index) in songlist" :key="song.data.songid" @click.stop="changeSong({song})">
+            <div class="songArea" v-for="(song,index) in songlist" :key="song.data.songid" @click.stop="changeSong({song})">
                 <div class="index">
                     <div class="num" :class="index <=2&&sort ? 'active' : ''"> {{ index+1 }} </div>
                     <div class="sort">
@@ -14,11 +14,11 @@
                     <div class="title" :class='{alive:song.data.songmid == singing.mid}'>{{song.data.songname}}</div>
                     <div class="singer" :class='{alive:song.data.songmid == singing.mid}'><font>{{getSinger(song.data.singer)}} ·</font>{{song.data.albumname}}</div>
                 </div>
-            </li>
+            </div>
         </div>
         <!-- 单纯的歌单或专辑列表 -->
         <div class="songList" v-else>
-            <li class="song" v-for="(song,index) in songlist" :key="index" @click.stop="changeSong({song})">
+            <div class="songArea" v-for="(song,index) in songlist" :key="index" @click.stop="changeSong({song})">
                 <div class="index">
                     <div class="num maincolor"> {{ index+1 }} </div>
                     <div class="sort"></div>
@@ -27,7 +27,7 @@
                     <div class="title" :class='{alive:song.songmid == singing.mid}'>{{song.songname}}</div>
                     <div class="singer" :class='{alive:song.songmid == singing.mid}'><font>{{getSinger(song.singer)}} ·</font>{{song.albumname}}</div>
                 </div>
-            </li>
+            </div>
         </div>
     </div>
 </template>
@@ -112,7 +112,7 @@ export default {
     height:auto
     .songList
         width:100%
-        .song
+        .songArea
             width:100%
             height:1.24rem
             overflow:hidden
@@ -120,7 +120,9 @@ export default {
             .index
                 color:$grayColor
                 display: -webkit-box
+                /*! autoprefixer: off */
                 -webkit-box-orient: vertical
+                /* autoprefixer: on */
                 -webkit-box-pack: center
                 -webkit-box-align: center
                 width: .9rem
@@ -152,7 +154,9 @@ export default {
                 -webkit-box-flex:1
                 color:$redColor
                 display: -webkit-box
+                /*! autoprefixer: off */
                 -webkit-box-orient: vertical
+                /* autoprefixer: on */
                 -webkit-box-pack:center
                 font-size:.33rem
                 .title

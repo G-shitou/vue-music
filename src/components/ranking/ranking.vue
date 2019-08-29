@@ -114,7 +114,9 @@ export default {
                 overflow:hidden
                 display:-webkit-box
                 -webkit-line-clamp:3
+                /*! autoprefixer: off */
                 -webkit-box-orient: vertical
+                /* autoprefixer: on */
                 li
                     white-space: nowrap
                     text-overflow: ellipsis                      
